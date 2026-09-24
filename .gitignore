@@ -20,3 +20,10 @@ reports/
 .idea/
 .DS_Store
 ostad project 2/
+
+# Debug artifacts
+ui-tests/debug-*.js
+ui-tests/debug-*.png
+test-results/
+Screenshot *.png
+ostad-project-2/
