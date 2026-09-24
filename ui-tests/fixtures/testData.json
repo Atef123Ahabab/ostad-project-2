@@ -1,0 +1,16 @@
+{
+  "invalidUser": {
+    "email": "invalid@test.com",
+    "password": "wrongpassword"
+  },
+  "newUser": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "johndoe",
+    "password": "Test@1234"
+  },
+  "product": {
+    "name": "Laptop",
+    "quantity": 2
+  }
+}
