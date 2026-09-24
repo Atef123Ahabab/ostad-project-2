@@ -18,3 +18,5 @@ reports/
 # IDE
 .vscode/
 .idea/
+.DS_Store
+ostad project 2/
