@@ -1,0 +1,25 @@
+{
+  "name": "ostad-project-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Atef123Ahabab/ostad-project-2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Atef123Ahabab/ostad-project-2/issues"
+  },
+  "homepage": "https://github.com/Atef123Ahabab/ostad-project-2#readme",
+  "devDependencies": {
+    "allure-commandline": "^2.46.1",
+    "newman": "^6.2.2",
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
+}
