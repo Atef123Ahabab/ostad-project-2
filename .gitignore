@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Playwright
+ui-tests/test-results/
+ui-tests/playwright-report/
+ui-tests/allure-results/
+ui-tests/allure-report/
+
+# Reports
+reports/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+ostad project 2/

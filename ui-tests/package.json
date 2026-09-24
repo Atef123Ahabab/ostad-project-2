@@ -1,0 +1,25 @@
+{
+  "name": "ui-tests",
+  "version": "1.0.0",
+  "main": "playwright.config.js",
+  "directories": {
+    "test": "tests"
+  },    
+  "scripts": {
+    "test": "npx playwright test",
+    "test:q1": "npx playwright test tests/q1-invalid-login.spec.js",
+    "test:q2": "npx playwright test tests/q2-register-add-cart.spec.js",
+    "test:q3": "npx playwright test tests/q3-e2e-checkout.spec.js",
+    "test:allure": "npx playwright test && allure generate allure-results --clean -o ../reports/allure-report",
+    "report:allure": "allure open ../reports/allure-report",
+    "report:html": "npx playwright show-report ../reports/html-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "allure-playwright": "^3.12.2"
+  }
+}
