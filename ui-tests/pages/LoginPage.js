@@ -5,6 +5,8 @@ class LoginPage {
     this.passwordInput = page.locator('#Password');
     this.loginButton = page.locator('input.login-button');
     this.errorMessage = page.locator('.validation-summary-errors');
+    this.logoutLink = page.locator('a.ico-logout');
+    this.accountLink = page.locator('a.account');
   }
 
   async navigate() {
@@ -15,6 +17,14 @@ class LoginPage {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
+  }
+
+  async loginAndWait(email, password) {
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.loginButton.click();
+    // Wait until logout link appears (proves logged in)
+    await this.logoutLink.waitFor({ state: 'visible', timeout: 15000 });
   }
 
   async getErrorMessage() {
