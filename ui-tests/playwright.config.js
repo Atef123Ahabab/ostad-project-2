@@ -4,6 +4,8 @@ module.exports = defineConfig({
   testDir: './tests',
   timeout: 60000,
   retries: 0,
+  workers: 1,                            // ← force sequential execution
+  fullyParallel: false,
   reporter: [
     ['list'],
     ['html', { outputFolder: '../reports/html-report', open: 'never' }],
