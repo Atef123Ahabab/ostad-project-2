@@ -3,23 +3,19 @@ class CheckoutPage {
     this.page = page;
   }
 
-  // Fill the billing new-address form (required on first checkout for new users)
   async fillBillingAddress() {
-    // Only fill if the form is visible (new users have no saved address)
     const country = this.page.locator('#BillingNewAddress_CountryId');
     if (!(await country.isVisible().catch(() => false))) {
       console.log('⏭ Billing form not visible — using existing address');
       return;
     }
 
-    // Wait for the state dropdown to be populated after country is selected
     await country.selectOption({ label: 'United States' });
     console.log('✓ Billing: selected country');
 
-    // Small wait for the state/province dropdown to populate via AJAX
     await this.page.waitForTimeout(1500);
+
     const state = this.page.locator('#BillingNewAddress_StateProvinceId');
-    // Pick first non-empty option
     const options = await state.locator('option').all();
     for (const opt of options) {
       const val = await opt.getAttribute('value');
@@ -37,8 +33,8 @@ class CheckoutPage {
     console.log('✓ Billing: filled city, address, zip, phone');
   }
 
-  // Click whichever continue button is currently visible
-  async clickVisibleContinue() {
+  // Robust: try all containers, wait for visible+enabled, scroll into view, click
+  async clickAnyVisibleContinue() {
     const containers = [
       'billing-buttons-container',
       'shipping-buttons-container',
@@ -47,24 +43,42 @@ class CheckoutPage {
       'payment-info-buttons-container',
       'confirm-order-buttons-container',
     ];
+
     for (const c of containers) {
       const btn = this.page.locator(`#${c} input.button-1`);
-      if (await btn.isVisible().catch(() => false)) {
-        await btn.click();
+      try {
+        const visible = await btn.isVisible().catch(() => false);
+        if (!visible) continue;
+
+        // Wait up to 15s for it to become enabled (AJAX might be in progress)
+        await btn.waitFor({ state: 'visible', timeout: 5000 });
+        await this.page.waitForFunction(
+          (sel) => {
+            const el = document.querySelector(sel);
+            return el && !el.disabled;
+          },
+          `#${c} input.button-1`,
+          { timeout: 15000 }
+        );
+
+        await btn.scrollIntoViewIfNeeded();
+        await btn.click({ timeout: 10000 });
         console.log(`✓ Clicked continue in #${c}`);
+        await this.page.waitForTimeout(1500);
         return c;
+      } catch (e) {
+        // try next container
       }
     }
     return null;
   }
 
   async completeCheckout() {
-    // Step 1: fill billing address if visible
     await this.fillBillingAddress();
 
-    const maxSteps = 12;
+    const maxSteps = 15;
     for (let i = 1; i <= maxSteps; i++) {
-      // Exit if confirmation shown
+      // Check if confirmation page appeared
       const confirmed = await this.page
         .locator('.title')
         .filter({ hasText: /successfully processed/i })
@@ -75,16 +89,7 @@ class CheckoutPage {
         return;
       }
 
-      const clicked = await this.clickVisibleContinue();
-      if (!clicked) {
-        console.log(`⚠ Step ${i}: no visible continue button`);
-        break;
-      }
-
-      // Wait for the page to respond (AJAX)
-      await this.page.waitForTimeout(2000);
-
-      // After billing, if the shipping new-address form appears, fill it
+      // Fill shipping address if present (some flows require it)
       const shippingCountry = this.page.locator('#ShippingNewAddress_CountryId');
       if (await shippingCountry.isVisible().catch(() => false)) {
         await shippingCountry.selectOption({ label: 'United States' });
@@ -103,6 +108,12 @@ class CheckoutPage {
         await this.page.locator('#ShippingNewAddress_ZipPostalCode').fill('10001');
         await this.page.locator('#ShippingNewAddress_PhoneNumber').fill('1234567890');
         console.log('✓ Filled shipping new-address form');
+      }
+
+      const clicked = await this.clickAnyVisibleContinue();
+      if (!clicked) {
+        console.log(`⚠ Step ${i}: no visible continue button — waiting more`);
+        await this.page.waitForTimeout(3000);
       }
     }
     console.log('⚠ Checkout loop finished');
