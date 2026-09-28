@@ -177,3 +177,19 @@ https://github.com/Atef123Ahabab/ostad-project-2
 ## Author
 
 Atef Ahabab - SQA 19
+
+## Screenshots
+
+Below are sample screenshots from a recent test run. You can also see them in the Allure report after running `npm run test:allure`.
+
+### Q1 - Invalid Login
+
+![Q1 Invalid Login](./docs/screenshots/q1-invalid-login.png)
+
+### Q2 - Cart Verification
+
+![Q2 Cart](./docs/screenshots/q2-cart.png)
+
+### Q3 - Order Confirmation
+
+![Q3 Order Confirmation](./docs/screenshots/q3-order-confirmation.png)
